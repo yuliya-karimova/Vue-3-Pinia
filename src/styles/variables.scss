@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+$dark-grey: #585858;
+$grey: #cccccc;
+$light-grey: #f8f8f8;
+$green: #2fcb5a;
+
+$button-inactive: #98abba;
+
+$fs-base: 12px;
+$fs-subtitle: 16px;
+$fs-title: 18px;
+
+$br-large: 8px;
+$br-medium: 4px;
+$br-small: 2px;
+
+$border-style: solid $grey;
+$border-style-dark: solid $dark-grey;
+
+$transition: 0.2 all ease-in-out;
+
+$screen-mobile: 560px;
+$screen-tablet: 960px;
+$screen-tablet: 1280px;

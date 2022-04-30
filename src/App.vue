@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import {useConnectionStore} from './stores/ConnectionStore';
-useConnectionStore();
+import NewCustomerWizard from "./components/NewCustomerWizard/NewCustomerWizard.vue";
 </script>
 
 <template>
+  <NewCustomerWizard />
 </template>
 
-<style>
+<style lang="scss">
+@import "./styles/variables.scss";
+@import "./styles/globalStyles.scss";
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 0;
+  font-family: "Roboto", sans-serif;
+  font-size: $fs-base;
 }
 </style>
