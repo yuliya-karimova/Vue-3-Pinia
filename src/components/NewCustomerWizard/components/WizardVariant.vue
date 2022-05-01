@@ -45,7 +45,7 @@ const getPrice = computed(() => {
 const onClick = () => {
   changeSelectedVariant(props.stepIndex, props.variantData);
 
-  if (props.stepIndex < store.stepList.length) {
+  if (props.stepIndex < store.stepList.length - 1) {
     changeCurrentStep(props.stepIndex + 1);
   }
 };

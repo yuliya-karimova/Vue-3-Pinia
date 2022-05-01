@@ -19,12 +19,16 @@ const setMaxHeight = () => {
   maxHeight.value = `${variantList.value?.scrollHeight || 0}px`;
 };
 
+const onClick = () => {
+  emit('changeStep', props.stepIndex)
+}
+
 onMounted(setMaxHeight);
 </script>
 
 <template>
   <div :class="['step', { active: isActive }]">
-    <h2 class="step__title" @click="emit('changeStep', stepIndex)">
+    <h2 class="step__title" @click="onClick">
       {{ props.stepData.title }}
     </h2>
     <div

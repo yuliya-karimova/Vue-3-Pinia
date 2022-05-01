@@ -5,12 +5,18 @@ import BaseTextButton from "../../base_components/BaseTextButton.vue";
 import { useNewCustomerStore } from "../../stores/NewCustomerStore";
 const store = useNewCustomerStore();
 
-const isTotalButtonDisabled = computed(() =>
-  store.stepsResults.every(({ selectedVariant }) => !!selectedVariant)
+const isTotalButtonDisabled = computed(
+  () => !store.stepsResults.every(({ selectedVariant }) => !!selectedVariant)
 );
 
-const changeStep = (stepIndex: number) => {
-  store.changeCurrentStep(stepIndex);
+const onChangeStep = (newStepIndex: number) => {
+  if (
+    newStepIndex < store.currentStep ||
+    (newStepIndex > store.currentStep &&
+      store.stepsResults[store.currentStep].selectedVariant)
+  ) {
+    store.changeCurrentStep(newStepIndex);
+  }
 };
 </script>
 
@@ -21,7 +27,7 @@ const changeStep = (stepIndex: number) => {
     :step-data="step"
     :step-index="index"
     :is-active="index === store.currentStep"
-    @change-step="changeStep"
+    @change-step="onChangeStep"
   />
   <BaseTextButton
     class="total-button"
