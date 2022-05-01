@@ -14,8 +14,5 @@ const onInput = (isChecked: boolean) => {
 </script>
 
 <template>
-  <BaseCheckbox
-    :text="props.optionData.title"
-    @input="onInput"
-  />
+  <BaseCheckbox :text="props.optionData.title" @input="onInput" />
 </template>

@@ -20,8 +20,8 @@ const setMaxHeight = () => {
 };
 
 const onClick = () => {
-  emit('changeStep', props.stepIndex)
-}
+  emit("changeStep", props.stepIndex);
+};
 
 onMounted(setMaxHeight);
 </script>

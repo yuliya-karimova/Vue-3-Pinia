@@ -11,7 +11,7 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   selectedItem: "",
-  isRequired: false
+  isRequired: false,
 });
 const emit = defineEmits(["select"]);
 
@@ -21,7 +21,7 @@ const selected = computed({
   },
   set(option) {
     emit("select", option);
-  }
+  },
 });
 </script>
 

@@ -13,7 +13,7 @@ const {
   changeCurrentStep,
   changeSelectedItem,
   checkOption,
-  uncheckOption
+  uncheckOption,
 } = store;
 
 type Props = {

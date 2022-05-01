@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(["input"]);
 
 const isChecked = computed({
-  get() {    
+  get() {
     return props.isChecked;
   },
   set(isCheckedValue) {

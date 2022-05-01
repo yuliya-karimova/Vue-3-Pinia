@@ -30,13 +30,13 @@ export type StepType = {
 export type SelectResultType = {
   title: string;
   selectedItem: SelectItemType | null;
-}
+};
 
 export type VariantResultType = {
   title: string;
-  price_default: number,
+  price_default: number;
   options: OptionType[];
-  selects: SelectResultType[]
+  selects: SelectResultType[];
 };
 
 export type StepResultType = {

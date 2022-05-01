@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     "vue/require-default-prop": "off",
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+    "newline-before-return": "error",
   },
 };

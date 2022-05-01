@@ -1,6 +1,11 @@
 import { defineStore } from "pinia";
 import data from "../data/data.json";
-import { OptionType, SelectItemType, StepType, VariantType } from "../globalTypes";
+import {
+  OptionType,
+  SelectItemType,
+  StepType,
+  VariantType,
+} from "../globalTypes";
 import { getOptionsSum, getResultTemplate, getSelectsSum } from "../helpers";
 
 const stepList: StepType[] = JSON.parse(JSON.stringify(data));
@@ -9,7 +14,7 @@ export const useNewCustomerStore = defineStore("NewCustomerStore", {
   state: () => ({
     currentStep: 0,
     stepList: stepList,
-    stepsResults: getResultTemplate(stepList)
+    stepsResults: getResultTemplate(stepList),
   }),
 
   getters: {
@@ -33,7 +38,7 @@ export const useNewCustomerStore = defineStore("NewCustomerStore", {
       }, 0);
 
       return total;
-    }
+    },
   },
 
   actions: {
@@ -66,5 +71,5 @@ export const useNewCustomerStore = defineStore("NewCustomerStore", {
     changeCurrentStep(stepIndex: number) {
       this.currentStep = stepIndex;
     },
-  }
+  },
 });

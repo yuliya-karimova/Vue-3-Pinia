@@ -3,7 +3,7 @@ import {
   SelectResultType,
   StepResultType,
   StepType,
-  VariantResultType
+  VariantResultType,
 } from "./globalTypes";
 
 export const getResultTemplate = (stepList: StepType[]): StepResultType[] => {
@@ -12,7 +12,7 @@ export const getResultTemplate = (stepList: StepType[]): StepResultType[] => {
       const selects: SelectResultType[] = variant.select.map((select) => {
         return {
           title: select.title,
-          selectedItem: null
+          selectedItem: null,
         };
       });
 
@@ -20,14 +20,14 @@ export const getResultTemplate = (stepList: StepType[]): StepResultType[] => {
         title: variant.title,
         price_default: variant.price_default,
         options: [],
-        selects
+        selects,
       };
     });
 
     return {
       title: step.title,
       selectedVariant: null,
-      variants
+      variants,
     };
   });
 };
