@@ -17,7 +17,7 @@ export type VariantType = {
   title: string;
   description: string;
   color: string;
-  price_default: string;
+  price_default: number;
   options: OptionType[];
   select: SelectType[];
 };
@@ -26,3 +26,8 @@ export type StepType = {
   title: string;
   variants: VariantType[];
 };
+
+export enum ConnectionVariants {
+  STANDART = "Стандартное подключение",
+  LUX = "LUX подключение"
+}

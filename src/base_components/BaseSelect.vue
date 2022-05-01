@@ -46,6 +46,7 @@ const selected = computed({
 
   &__select {
     padding: 6px;
+    font-size: $fs-base;
     border: 1px $border-style-dark;
     border-radius: $br-medium;
   }

@@ -11,7 +11,7 @@ const props = defineProps<Props>();
 <template>
   <BaseSelect
     :title="props.selectData.title"
-    :selected-item="selectData.items[0].title"
+    selected-item=""
     :item-list="selectData.items"
     :is-required="true"
   />

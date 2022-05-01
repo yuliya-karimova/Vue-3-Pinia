@@ -12,5 +12,7 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   rules: {
     "vue/require-default-prop": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
   },
 };

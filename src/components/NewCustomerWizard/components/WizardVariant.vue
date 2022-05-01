@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import BaseTextButton from "../../../base_components/BaseTextButton.vue";
+import { computed } from "vue";
+import { ConnectionVariants } from "../../../globalTypes";
 import { VariantType } from "../../../globalTypes";
-import WizardStandartOption from "./WizardStandartOption.vue";
-import WizardLuxSelect from "./WizardLuxSelect.vue";
+import WizardOption from "./WizardOption.vue";
+import WizardSelect from "./WizardSelect.vue";
+import { useNewCustomerStore } from "../../../stores/NewCustomerStore";
+const { standartPrice, luxPrice } = useNewCustomerStore();
 
 type Props = {
   variantData: VariantType;
@@ -15,6 +19,18 @@ const descriptionList = props.variantData.description.split("\n");
 const click = () => {
   console.log("click");
 };
+
+const getPrice = computed(() => {
+  if (props.variantData.title === ConnectionVariants.STANDART) {
+    return standartPrice;
+  }
+
+  if (props.variantData.title === ConnectionVariants.LUX) {
+    return luxPrice;
+  }
+
+  return props.variantData.price_default;
+});
 </script>
 
 <template>
@@ -28,14 +44,14 @@ const click = () => {
       </div>
     </div>
     <div class="variant__column variant__column_right">
-      <p class="variant__price">{{ props.variantData.price_default }} ₽</p>
+      <p class="variant__price">{{ getPrice }} ₽</p>
       <div class="variant__controls">
-        <WizardStandartOption
+        <WizardOption
           v-for="option in props.variantData.options"
           :key="option.title"
           :option-data="option"
         />
-        <WizardLuxSelect
+        <WizardSelect
           v-for="select in props.variantData.select"
           :key="select.title"
           :select-data="select"
