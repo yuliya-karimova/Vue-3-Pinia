@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Ref } from "vue";
-import { onMounted, ref } from "@vue/runtime-dom";
 import WizardVariant from "./WizardVariant.vue";
 import { StepType } from "../../../globalTypes";
 
@@ -12,30 +10,17 @@ type Props = {
 const props = defineProps<Props>();
 const emit = defineEmits(["changeStep"]);
 
-const variantList: Ref<HTMLDivElement | null> = ref(null);
-let maxHeight: Ref<string> = ref("auto");
-
-const setMaxHeight = () => {
-  maxHeight.value = `${variantList.value?.scrollHeight || 0}px`;
-};
-
 const onClick = () => {
   emit("changeStep", props.stepIndex);
 };
-
-onMounted(setMaxHeight);
 </script>
 
 <template>
   <div :class="['step', { active: isActive }]">
-    <h2 class="step__title" @click="onClick">
+    <h2 :class="['step__title', { active: isActive }]" @click="onClick">
       {{ props.stepData.title }}
     </h2>
-    <div
-      ref="variantList"
-      class="step__variant-list"
-      :style="{ 'max-height': isActive ? maxHeight : '0' }"
-    >
+    <div class="step__variant-list">
       <WizardVariant
         v-for="(variant, index) in props.stepData.variants"
         :key="variant.title"
@@ -55,32 +40,35 @@ onMounted(setMaxHeight);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-top: 20px;
+  padding: 20px 0;
   border-top: 2px solid $grey;
-  transition: 0.1s padding-bottom ease-in-out;
-  transition-delay: 0.4s;
 
   &__title {
     font-size: $fs-subtitle;
     color: $grey;
-    transition: 0.5s color ease-in-out;
-  }
-
-  &.active {
-    padding-bottom: 20px;
-
-    .step__title {
-      color: black;
-    }
+    transition: 0.4s all ease-out;
+    cursor: pointer;
   }
 
   &__variant-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    height: auto;
-    transition: 0.5s max-height ease-in-out;
+    max-height: 0;
+    transition: 0.4s all ease-out;
     overflow: hidden;
+    margin-bottom: -20px;
+  }
+
+  &.active {
+    .step__title {
+      color: black;
+    }
+
+    .step__variant-list {
+      max-height: 100vh;
+      margin-bottom: 0;
+    }
   }
 }
 </style>

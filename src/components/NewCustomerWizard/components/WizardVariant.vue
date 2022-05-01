@@ -13,7 +13,7 @@ const {
   changeCurrentStep,
   changeSelectedItem,
   checkOption,
-  uncheckOption,
+  uncheckOption
 } = store;
 
 type Props = {
@@ -96,19 +96,21 @@ const isButtonDisabled = computed(() => {
     <div class="variant__column variant__column_right">
       <p class="variant__price">{{ getPrice }} ₽</p>
       <div class="variant__controls">
-        <WizardOption
-          v-for="option in props.variantData.options"
-          :key="option.title"
-          :option-data="option"
-          @input="onInput"
-        />
-        <WizardSelect
-          v-for="(select, index) in props.variantData.select"
-          :key="select.title"
-          :select-data="select"
-          :select-index="index"
-          @select="onSelect"
-        />
+        <div :class="['variant__inputs', { chosen: isChosen }]">
+          <WizardOption
+            v-for="option in props.variantData.options"
+            :key="option.title"
+            :option-data="option"
+            @input="onInput"
+          />
+          <WizardSelect
+            v-for="(select, index) in props.variantData.select"
+            :key="select.title"
+            :select-data="select"
+            :select-index="index"
+            @select="onSelect"
+          />
+        </div>
         <BaseTextButton
           :is-disabled="isButtonDisabled"
           :is-active="isChosen"
@@ -181,6 +183,16 @@ const isButtonDisabled = computed(() => {
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &.chosen {
+      opacity: 0.5;
+    }
   }
 
   &__option-list {
