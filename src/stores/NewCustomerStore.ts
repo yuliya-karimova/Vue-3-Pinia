@@ -1,92 +1,70 @@
 import { defineStore } from "pinia";
 import data from "../data/data.json";
-import {
-  OptionType,
-  SelectItemType,
-  StepType,
-  VariantType
-} from "../globalTypes";
-import { ConnectionVariants } from "../globalTypes";
+import { OptionType, SelectItemType, StepType, VariantType } from "../globalTypes";
+import { getOptionsSum, getResultTemplate, getSelectsSum } from "../helpers";
 
 const stepList: StepType[] = JSON.parse(JSON.stringify(data));
 
 export const useNewCustomerStore = defineStore("NewCustomerStore", {
   state: () => ({
     currentStep: 0,
-    steps: stepList,
-    connectionVariant: null as VariantType | null,
-    routerVariant: null as VariantType | null,
-    standartCheckedOptions: [] as OptionType[],
-    luxSelectedItem: null as SelectItemType | null
+    stepList: stepList,
+    stepsResults: getResultTemplate(stepList)
   }),
 
   getters: {
-    isConnectionStandart: (state) => {
-      return state.connectionVariant?.title === ConnectionVariants.STANDART
-    },
-  
-    isConnectionLux: (state) => {
-      return state.connectionVariant?.title === ConnectionVariants.LUX
-    },
-
-    standartPrice: (state) => {
-      return (
-        state.steps[0].variants[0].price_default +
-        state.standartCheckedOptions.reduce((acc, { price }) => acc + price, 0)
-      );
-    },
-
-    luxPrice: (state) => {
-      return (
-        state.steps[0].variants[1].price_default +
-        (state.luxSelectedItem?.price || 0)
-      );
-    },
-
     totalPrice(state) {
-      let total = 0;
+      const total = state.stepsResults.reduce((acc, step) => {
+        const selectedVariantResults = step.variants.find(
+          ({ title }) => title === step.selectedVariant?.title
+        );
 
-      if (this.isConnectionStandart) {
-        total += this.standartPrice;
-      }
+        if (selectedVariantResults) {
+          let optionsSum = getOptionsSum(selectedVariantResults.options);
+          let selectsSum = getSelectsSum(selectedVariantResults.selects);
 
-      if (this.isConnectionLux) {
-        total += this.luxPrice;
-      }
+          const variantPrice =
+            selectedVariantResults.price_default + selectsSum + optionsSum;
 
-      if (state.routerVariant) {
-        total += state.routerVariant.price_default;
-      }
+          return (acc += variantPrice);
+        }
+
+        return acc;
+      }, 0);
 
       return total;
     }
   },
 
   actions: {
-    checkOption(option: OptionType) {
-      this.standartCheckedOptions.push(option);
+    checkOption(option: OptionType, stepIndex: number, variantIndex: number) {
+      this.stepsResults[stepIndex].variants[variantIndex].options.push(option);
     },
 
-    uncheckOption(option: OptionType) {
-      this.standartCheckedOptions = this.standartCheckedOptions.filter(
-        ({ title }) => title !== option.title
-      );
+    uncheckOption(option: OptionType, stepIndex: number, variantIndex: number) {
+      this.stepsResults[stepIndex].variants[variantIndex].options =
+        this.stepsResults[stepIndex].variants[variantIndex].options.filter(
+          ({ title }) => title !== option.title
+        );
     },
 
-    selectLuxOption(option: OptionType) {
-      this.luxSelectedItem = option;
+    changeSelectedItem(
+      selectItemData: SelectItemType,
+      stepIndex: number,
+      variantIndex: number,
+      selectIndex: number
+    ) {
+      this.stepsResults[stepIndex].variants[variantIndex].selects[
+        selectIndex
+      ].selectedItem = selectItemData;
     },
 
-    changeConnectionVariant(variant: VariantType) {
-      this.connectionVariant = variant;
+    changeSelectedVariant(stepIndex: number, variantData: VariantType) {
+      this.stepsResults[stepIndex].selectedVariant = variantData;
     },
 
-    changeRouterVariant(variant: VariantType) {
-      this.routerVariant = variant;
+    changeCurrentStep(stepIndex: number) {
+      this.currentStep = stepIndex;
     },
-
-    changeCurrentStep(stepNumber: number) {
-      this.currentStep = stepNumber;
-    }
   }
 });

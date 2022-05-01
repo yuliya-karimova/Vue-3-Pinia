@@ -5,26 +5,29 @@ import BaseTextButton from "../../base_components/BaseTextButton.vue";
 import { useNewCustomerStore } from "../../stores/NewCustomerStore";
 const store = useNewCustomerStore();
 
-const isTotalButtonDisabled = computed(
-  () => !store.connectionVariant || !store.routerVariant
+const isTotalButtonDisabled = computed(() =>
+  store.stepsResults.every(({ selectedVariant }) => !!selectedVariant)
 );
 
-const changeStep = (stepNumber: number) => {
-  if (stepNumber)
-store.changeCurrentStep
-}
+const changeStep = (stepIndex: number) => {
+  store.changeCurrentStep(stepIndex);
+};
 </script>
 
 <template>
   <WizardStep
-    v-for="(step, index) in store.steps"
+    v-for="(step, index) in store.stepList"
     :key="step.title"
     :step-data="step"
     :step-index="index"
     :is-active="index === store.currentStep"
     @change-step="changeStep"
   />
-  <BaseTextButton class="total-button" :is-disabled="isTotalButtonDisabled" :is-active="!isTotalButtonDisabled">
+  <BaseTextButton
+    class="total-button"
+    :is-disabled="isTotalButtonDisabled"
+    :is-active="!isTotalButtonDisabled"
+  >
     <span>ИТОГО К ОПЛАТЕ</span>
     <span>{{ store.totalPrice }} ₽</span>
   </BaseTextButton>

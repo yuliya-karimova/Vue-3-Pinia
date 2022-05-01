@@ -5,7 +5,7 @@ type Props = {
 };
 const props = withDefaults(defineProps<Props>(), {
   isDisabled: false,
-  isActive: false,
+  isActive: false
 });
 const emit = defineEmits(["click"]);
 const onClick = () => {
@@ -15,7 +15,7 @@ const onClick = () => {
 
 <template>
   <button
-    :class="['button', { button_active: props.isActive }]"
+    :class="['button', { button_active: props.isActive, button_disabled: props.isDisabled }]"
     :disabled="props.isDisabled"
     @click="onClick"
   >
@@ -40,7 +40,6 @@ const onClick = () => {
 
   &_active {
     background-color: $green;
-    pointer-events: none;
   }
 }
 </style>

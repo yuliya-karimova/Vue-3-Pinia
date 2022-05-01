@@ -1,57 +1,85 @@
 <script setup lang="ts">
 import BaseTextButton from "../../../base_components/BaseTextButton.vue";
 import { computed } from "vue";
-import { ConnectionVariants } from "../../../globalTypes";
-import { VariantType } from "../../../globalTypes";
+import { OptionType, SelectItemType, VariantType } from "../../../globalTypes";
 import WizardOption from "./WizardOption.vue";
 import WizardSelect from "./WizardSelect.vue";
 import { useNewCustomerStore } from "../../../stores/NewCustomerStore";
+import { getOptionsSum, getSelectsSum } from "../../../helpers";
 
 const store = useNewCustomerStore();
-const { changeConnectionVariant, changeRouterVariant, changeCurrentStep } = store;
+const {
+  changeSelectedVariant,
+  changeCurrentStep,
+  changeSelectedItem,
+  checkOption,
+  uncheckOption
+} = store;
 
 type Props = {
   variantData: VariantType;
   color: string;
+  stepIndex: number;
+  variantIndex: number;
 };
 const props = defineProps<Props>();
 const descriptionList = props.variantData.description.split("\n");
 
-const isStandartVariant = computed(
-  () => props.variantData.title === ConnectionVariants.STANDART
+const isChosen = computed(
+  () =>
+    store.stepsResults[props.stepIndex].selectedVariant?.title ===
+    props.variantData.title
 );
-
-const isLuxVariant = computed(
-  () => props.variantData.title === ConnectionVariants.LUX
-);
-
-const isChosen = computed(() => {
-  if (isStandartVariant.value || isLuxVariant.value) {
-    return store.connectionVariant?.title === props.variantData.title;
-  } else {
-    return store.routerVariant?.title === props.variantData.title;
-  }
-});
 
 const getPrice = computed(() => {
-  if (isStandartVariant.value) return store.standartPrice;
+  const variantResult =
+    store.stepsResults[props.stepIndex].variants[props.variantIndex];
 
-  if (isLuxVariant.value) return store.luxPrice;
+  let sum = variantResult.price_default;
+  sum += getOptionsSum(variantResult.options);
+  sum += getSelectsSum(variantResult.selects);
 
-  return props.variantData.price_default;
+  return sum;
 });
 
 const onClick = () => {
-  if (isStandartVariant.value || isLuxVariant.value) {
-    changeConnectionVariant(props.variantData);
-    changeCurrentStep(1);
+  changeSelectedVariant(props.stepIndex, props.variantData);
+
+  if (props.stepIndex < store.stepList.length) {
+    changeCurrentStep(props.stepIndex + 1);
+  }
+};
+
+const onSelect = (selectItemData: SelectItemType, selectIndex: number) => {
+  changeSelectedItem(
+    selectItemData,
+    props.stepIndex,
+    props.variantIndex,
+    selectIndex
+  );
+};
+
+const onInput = (optionData: OptionType, isChecked: boolean) => {
+  if (isChecked) {
+    checkOption(optionData, props.stepIndex, props.variantIndex);
   } else {
-    changeRouterVariant(props.variantData);
+    uncheckOption(optionData, props.stepIndex, props.variantIndex);
   }
 };
 
 const isButtonDisabled = computed(() => {
-  return !!(isLuxVariant.value && !store.luxSelectedItem);
+  const isContainsSelect = !!props.variantData.select.length;
+
+  if (!isContainsSelect) return false;
+
+  const selectsResults =
+    store.stepsResults[props.stepIndex].variants[props.variantIndex].selects;
+
+  const isAllSelectesInVariantHaveValue = selectsResults.every(
+    (select) => select.selectedItem
+  );
+
+  return !isAllSelectesInVariantHaveValue;
 });
 </script>
 
@@ -72,15 +100,21 @@ const isButtonDisabled = computed(() => {
           v-for="option in props.variantData.options"
           :key="option.title"
           :option-data="option"
+          @input="onInput"
         />
         <WizardSelect
-          v-for="select in props.variantData.select"
+          v-for="(select, index) in props.variantData.select"
           :key="select.title"
           :select-data="select"
+          :select-index="index"
+          @select="onSelect"
         />
-        <BaseTextButton :is-disabled="isButtonDisabled" :is-active="isChosen" @click="onClick">{{
-          isChosen ? "Выбрано" : "Выбрать"
-        }}</BaseTextButton>
+        <BaseTextButton
+          :is-disabled="isButtonDisabled"
+          :is-active="isChosen"
+          @click="onClick"
+          >{{ isChosen ? "Выбрано" : "Выбрать" }}</BaseTextButton
+        >
       </div>
     </div>
   </div>

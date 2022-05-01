@@ -33,10 +33,12 @@ onMounted(setMaxHeight);
       :style="{ 'max-height': isActive ? maxHeight : '0' }"
     >
       <WizardVariant
-        v-for="variant in props.stepData.variants"
+        v-for="(variant, index) in props.stepData.variants"
         :key="variant.title"
         :variant-data="variant"
         :color="variant.color"
+        :step-index="stepIndex"
+        :variant-index="index"
       />
     </div>
   </div>
