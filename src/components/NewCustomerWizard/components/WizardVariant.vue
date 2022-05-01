@@ -6,30 +6,52 @@ import { VariantType } from "../../../globalTypes";
 import WizardOption from "./WizardOption.vue";
 import WizardSelect from "./WizardSelect.vue";
 import { useNewCustomerStore } from "../../../stores/NewCustomerStore";
-const { standartPrice, luxPrice } = useNewCustomerStore();
+
+const store = useNewCustomerStore();
+const { changeConnectionVariant, changeRouterVariant, changeCurrentStep } = store;
 
 type Props = {
   variantData: VariantType;
   color: string;
-  isChoosen: boolean;
 };
 const props = defineProps<Props>();
 const descriptionList = props.variantData.description.split("\n");
 
-const click = () => {
-  console.log("click");
-};
+const isStandartVariant = computed(
+  () => props.variantData.title === ConnectionVariants.STANDART
+);
+
+const isLuxVariant = computed(
+  () => props.variantData.title === ConnectionVariants.LUX
+);
+
+const isChosen = computed(() => {
+  if (isStandartVariant.value || isLuxVariant.value) {
+    return store.connectionVariant?.title === props.variantData.title;
+  } else {
+    return store.routerVariant?.title === props.variantData.title;
+  }
+});
 
 const getPrice = computed(() => {
-  if (props.variantData.title === ConnectionVariants.STANDART) {
-    return standartPrice;
-  }
+  if (isStandartVariant.value) return store.standartPrice;
 
-  if (props.variantData.title === ConnectionVariants.LUX) {
-    return luxPrice;
-  }
+  if (isLuxVariant.value) return store.luxPrice;
 
   return props.variantData.price_default;
+});
+
+const onClick = () => {
+  if (isStandartVariant.value || isLuxVariant.value) {
+    changeConnectionVariant(props.variantData);
+    changeCurrentStep(1);
+  } else {
+    changeRouterVariant(props.variantData);
+  }
+};
+
+const isButtonDisabled = computed(() => {
+  return !!(isLuxVariant.value && !store.luxSelectedItem);
 });
 </script>
 
@@ -56,8 +78,8 @@ const getPrice = computed(() => {
           :key="select.title"
           :select-data="select"
         />
-        <BaseTextButton :is-disabled="false" :click="click">{{
-          isChoosen ? "Выбрано" : "Выбрать"
+        <BaseTextButton :is-disabled="isButtonDisabled" :is-active="isChosen" @click="onClick">{{
+          isChosen ? "Выбрано" : "Выбрать"
         }}</BaseTextButton>
       </div>
     </div>

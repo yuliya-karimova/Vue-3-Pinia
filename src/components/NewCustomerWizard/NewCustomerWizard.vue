@@ -1,20 +1,32 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import WizardStep from "./components/WizardStep.vue";
 import BaseTextButton from "../../base_components/BaseTextButton.vue";
 import { useNewCustomerStore } from "../../stores/NewCustomerStore";
-const { steps, currentStep, totalPrice } = useNewCustomerStore();
+const store = useNewCustomerStore();
+
+const isTotalButtonDisabled = computed(
+  () => !store.connectionVariant || !store.routerVariant
+);
+
+const changeStep = (stepNumber: number) => {
+  if (stepNumber)
+store.changeCurrentStep
+}
 </script>
 
 <template>
   <WizardStep
-    v-for="(step, index) in steps"
+    v-for="(step, index) in store.steps"
     :key="step.title"
     :step-data="step"
-    :is-active="index === currentStep"
+    :step-index="index"
+    :is-active="index === store.currentStep"
+    @change-step="changeStep"
   />
-  <BaseTextButton class="total-button">
+  <BaseTextButton class="total-button" :is-disabled="isTotalButtonDisabled" :is-active="!isTotalButtonDisabled">
     <span>ИТОГО К ОПЛАТЕ</span>
-    <span>{{ totalPrice }} ₽</span>
+    <span>{{ store.totalPrice }} ₽</span>
   </BaseTextButton>
 </template>
 

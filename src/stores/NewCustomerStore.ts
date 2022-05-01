@@ -71,6 +71,22 @@ export const useNewCustomerStore = defineStore("NewCustomerStore", {
       this.standartCheckedOptions = this.standartCheckedOptions.filter(
         ({ title }) => title !== option.title
       );
+    },
+
+    selectLuxOption(option: OptionType) {
+      this.luxSelectedItem = option;
+    },
+
+    changeConnectionVariant(variant: VariantType) {
+      this.connectionVariant = variant;
+    },
+
+    changeRouterVariant(variant: VariantType) {
+      this.routerVariant = variant;
+    },
+
+    changeCurrentStep(stepNumber: number) {
+      this.currentStep = stepNumber;
     }
   }
 });

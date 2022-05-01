@@ -4,13 +4,14 @@ import { SelectItemType } from "../globalTypes";
 
 type Props = {
   title: string;
-  selectedItem: string;
   itemList: SelectItemType[];
+  selectedItem?: string;
   isRequired?: boolean;
 };
 
 const props = withDefaults(defineProps<Props>(), {
-  isRequired: false,
+  selectedItem: "",
+  isRequired: false
 });
 const emit = defineEmits(["select"]);
 
@@ -20,7 +21,7 @@ const selected = computed({
   },
   set(option) {
     emit("select", option);
-  },
+  }
 });
 </script>
 
